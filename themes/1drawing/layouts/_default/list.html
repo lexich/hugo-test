@@ -1,0 +1,52 @@
+	{{ partial "head.html" . }}
+	<body>
+		<style>p { margin-bottom: 5px; } p a, a { color: red; } div {margin-bottom: 40px;}img { color:white; max-height:800px; width: auto; margin-bottom: 40px;}h3 {font-weight: 600; font-size: 16px;} h1 a{font-size: 14px; font-weight: 600; color: red;}h1 {margin: 0 0 20px;}</style>
+		<div id="main">
+			<section class="wrapper home">
+				<div class="archive">
+					<h1><a href="/">Home</a>
+											<h2>Nested Taxonomies</h2>
+											---
+						<h3>Chronological Archive</h3>
+						{{- $var := .Scratch -}}
+					{{ range .Pages }}
+						<p>Year: <a href="{{ print .Section "/" .Params.year | relURL }}">{{ .Params.year }}</a> | Month: <a href="{{ print .Section "/" .Params.month | relURL }}">{{ .Params.month }}</a></p>
+						{{- $var.Add "color" (slice .Params.color) -}}
+						{{ end }}
+						{{- $var.Set "color" ($var.Get "color" | uniq) -}}
+						{{- $color := $var.Get "color" }}
+						---
+						<h3>Color Archive</h3>
+						{{- range $key, $value := $color }}
+						<p>{{ $value }}<p>
+						<a href="{{ $value | relURL }}">{{ replaceRE "(^(?s:[^/]*/))" "" $value | title }}</a>
+						{{ end }}
+						<br>
+						---
+
+
+					<ul class="column" style="margin-top:40px;">
+					{{ range .Pages }}
+   					<li>
+   						<div>
+   							{{ .Date.Format "02.01.2006" }} {{ with .Resources.ByType "image" }}{{ range . | first 1 }}{{ .Name | replaceRE ".jpg" "" | humanize | title }}{{ end }}{{ end }}
+   						</div>
+								<a href="{{ .Permalink }}" class="post-link">
+									{{ .Content }}
+						{{ with .Resources.ByType "image" }}
+            {{ range . }} 
+            <li>
+            <img src="{{ .RelPermalink }}" alt='{{ .Name | replaceRE ".jpg" "" | humanize | title }}'>           
+            {{ end }}
+            {{ end }}
+                 			</a>
+							</li>
+							{{ end }}
+
+                    </ul>
+				</div>
+			</section>
+			{{ partial "js.html" . }}
+		</div>
+	</body>
+</html>

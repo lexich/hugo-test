@@ -1,0 +1,25 @@
+      <style type="text/css">
+      #instafeed{
+  list-style:none  
+}
+#instafeed li{
+  float:left;
+  width:200px;
+  height:200px;
+  margin:10px
+}
+#instafeed li img{
+  max-width:100%;
+  max-height:100%;
+}
+    </style>
+    <ul id="instafeed">
+  {{ $urlPre := "https://api.instagram.com/v1/users/self/media/recent?access_token=" }}
+  {{ $id := .Site.Params.inst_access }}
+  {{ $inst := getJSON $urlPre $id }}
+  {{ range first 6 $inst.data }}
+  <li>
+    <a href="{{ .link }}" target="_blank"><img src="{{ .images.standard_resolution.url }}" alt="{{ .caption.text }}"></a>
+  </li>
+      {{ end }}
+    </ul>

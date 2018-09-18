@@ -1,0 +1,161 @@
+{{ if .IsNamedParams }}
+{{- $gram := getJSON "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/" (.Get "id") "/&amp;maxwidth=640&amp;omitscript=true" -}}
+{{ $id := .Get "id" }}
+{{ $likes := .Get "likes" }}
+{{ with $gram }}
+    {{ $authorURL := print "https://instagram.com/" .author_name "/" }}
+    {{ $mediaURL := print "https://instagram.com/p/" $id "/" }}
+      <div class="Embed">
+        <div class="Header"><div class="AvatarContainer">
+          <a class="Avatar" href="{{ $authorURL }}" target="_blank">
+           <img src="{{ with $.Get "avatar" }}{{ . }}{{ else }}{{ $.Page.Params.inst_avatar | default $.Site.Params.inst_avatar }}{{ end }}" alt="{{ .author_name }}"> 
+          </a>
+        </div><div class="HeaderText">
+        <a class="Username" href="{{ $authorURL }}"target="_blank">
+          {{ .author_name }}</a>
+          <a class="FollowButton " href="{{ $authorURL }}" target="_blank">
+          <span class="FollowText">
+            Follow
+          </span>
+        </a>      
+    </div>
+          </div>
+<div class="Content EmbedFrame">
+<img class="EmbeddedMediaImage" src="{{ with $.Get "video" }}{{ . }}{{ end }}{{ with $.Get "carousel" }}{{ . }}{{ end }}" alt="{{ .title }}">  
+        {{ with $.Get "video" }}<svg class="video-overlay-play-button" alt="Play video" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<path d="m34.857 3.613c-14.773-8.474-26.75-1.532-26.75 15.493v125.64c0 17.042 11.977 23.975 26.75 15.509l109.81-62.977c14.778-8.477 14.778-22.211 0-30.686l-109.81-62.976z" fill="#fff"/>
+</svg>{{ end }}
+      </div>
+      <div class="HoverCardCTA">
+        <a href="{{ $authorURL }}" target="_blank">View More on Instagram</a>
+      </div>
+    <div class="Feedback">
+      <a class="Likes" href="{{ $mediaURL }}" target="_blank">
+        <span style="width: 24px; height: 21.3px;"><svg xmlns="http://www.w3.org/2000/svg">
+<g>
+<path class="st0" d="m12 21.3c-0.4 0-0.8-0.2-1-0.4l-7.9-7.9c-0.1 0-0.2-0.2-0.4-0.4s-0.4-0.5-0.7-0.9-0.6-0.9-0.9-1.3c-0.3-0.5-0.5-1-0.7-1.7-0.3-0.6-0.4-1.3-0.4-2 0-2 0.6-3.7 1.8-4.9s2.8-1.8 4.9-1.8c0.6 0 1.2 0.1 1.8 0.3s1.2 0.5 1.7 0.8 0.9 0.6 1.3 0.9c0.2 0.2 0.4 0.3 0.5 0.5 0.2-0.2 0.4-0.3 0.5-0.5 0.4-0.3 0.8-0.6 1.3-0.9s1.1-0.6 1.7-0.8 1.2-0.3 1.8-0.3c2.1 0 3.7 0.6 4.9 1.8s1.8 2.9 1.8 4.9c0 2.1-1 4.2-3.1 6.3l-7.9 7.8c-0.2 0.3-0.6 0.5-1 0.5zm-5.3-20c-1.7 0-3 0.5-4 1.4-0.9 1-1.4 2.3-1.4 4 0 0.5 0.1 1 0.3 1.6s0.4 1 0.6 1.4c0.3 0.5 0.5 0.9 0.8 1.3s0.5 0.7 0.7 0.8c0.1 0.1 0.2 0.2 0.3 0.2l8 7.9h0.1l7.9-7.8c1.8-1.8 2.7-3.6 2.7-5.4 0-1.7-0.5-3-1.4-4s-2.2-1.4-4-1.4c-0.4 0-0.9 0.1-1.4 0.2-0.5 0.2-0.9 0.5-1.4 0.7l-1.2 0.9c-0.3 0.3-0.6 0.5-0.9 0.8s-0.7 0.3-1 0-0.6-0.6-0.9-0.8c-0.3-0.3-0.7-0.6-1.2-0.9-0.3-0.2-0.7-0.5-1.2-0.6-0.5-0.2-0.9-0.3-1.4-0.3z" fil="#2A2A2A"/>
+</g>
+</svg>
+</span>
+        <span class="LikeSpriteHover embedSpriteHeartOpenRed"></span>
+        <span class="hidden">Like</span>
+      </a>
+      <a class="Comments" href="{{ $mediaURL }}" target="_blank">
+        <span class="hideText embedSpriteComment">
+          Comment
+        </span>
+      </a>
+      <a class="Save" href="{{ $mediaURL }}" target="_blank">
+        <span class="hideText embedSpriteSaveOpen">
+          Save
+        </span>
+      </a>
+    </div>
+   <div class="SocialProof">
+      <a href="{{ $mediaURL }}" target="_blank">
+        {{ with $likes }}{{ if gt . 1 }}{{ . }} likes{{ else }}1 like{{ end }}{{ end }}
+      </a>
+    </div>
+     <div class="Footer">
+      <a class="Timestamp" href="{{ $mediaURL }}" target="_blank">
+        {{ $timestamp := .html | replaceRE "(<)(.*)(datetime=)" "" | replaceRE "((?:>[^>\r\n]*){5})$" "" | replaceRE "\"" "" | string | time }}
+        {{ $minutes := div (sub now.Unix $timestamp.Unix) 60 }}
+        {{ $hours := div (sub now.Unix $timestamp.Unix) 3600 }}
+        {{ $days := div (sub now.Unix $timestamp.Unix) 86400 }}
+        {{ $months := div (sub now.Unix $timestamp.Unix) 2629800 }}
+        <span class="ago" datetime="{{ $timestamp }}">
+          {{ if lt $minutes 60 }}{{ $minutes }} minutes ago{{ end }}{{ if lt $hours 24 }}{{ if eq $hours 1 }}{{ $hours }} hour ago{{ end }}{{ if gt $hours 1 }}{{ $hours }} hours ago{{ end }}{{ end }}{{ if lt $days 30 }}{{ if eq $days 1 }}{{ $days }} day ago{{ end }}{{ if gt $days 1 }}{{ $days }} days ago{{ end }}{{ end }}{{ if eq $months 1 }}{{ $months }} month ago{{ end }}{{ if gt $months 1 }}{{ $months }} months ago{{ end }}
+        </span></a>
+      <a class="Glyph" href="{{ $mediaURL }}" target="_blank">
+        <span class="Sprite embedSpriteGlyph hideText">Instagram</span>
+      </a>      
+    </div></div>
+       </div>
+{{ end }}
+{{ else }}
+  {{ $urlPre := "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/" }}
+  {{ $id := index .Params 0 }}
+   {{ $like := print (index .Params 1) }}
+   {{ $likes := print (index .Params 2) }}
+  {{ $inst := getJSON $urlPre $id "/&amp;maxwidth=640&amp;omitscript=true" }}
+  {{ with $inst }}
+    {{ $authorURL := print "https://instagram.com/" .author_name "/" }}
+    {{ $mediaURL := print "https://instagram.com/p/" $id "/" }}
+      <div class="Embed">
+        <div class="Header"><div class="AvatarContainer">
+          <a class="Avatar" href="{{ $authorURL }}" target="_blank"><img src="{{ $.Page.Params.inst_avatar | default $.Site.Params.inst_avatar }}" alt="{{ .author_name }}"></a>
+        </div><div class="HeaderText">
+        <a class="Username" href="{{ $authorURL }}" target="_blank">{{ .author_name }}</a>
+          <a class="FollowButton " href="{{ $authorURL }}" target="_blank">
+          <span class="FollowText">
+            Follow
+          </span>
+          <span class="FollowingText">
+            Following
+          </span>
+        </a>      
+    </div>
+          </div>
+        <div class="Content EmbedFrame">
+      <a class="EmbeddedMedia" href="{{ $mediaURL }}" target="_blank">
+        <img class="EmbeddedMediaImage" src="{{ .thumbnail_url }}" alt="{{ .title }}"></a>
+    </div>
+<div class="HoverCardCTA">
+        <a href="{{ $authorURL }}" target="_blank">View More on Instagram</a>
+      </div>
+    <div class="Feedback">
+      <a class="Likes" href="{{ $mediaURL }}" target="_blank">
+        <span class="LikeSprite embedSpriteHeartOpen"></span>
+        <span class="LikeSpriteHover embedSpriteHeartOpenRed"></span>
+        <span class="hidden">Like</span>
+      </a>
+      <a class="Comments" href="{{ $mediaURL }}" target="_blank">
+        <span class="hideText embedSpriteComment">
+          Comment
+        </span>
+      </a>
+      <a class="Save" href="{{ $mediaURL }}" target="_blank">
+        <span class="hideText embedSpriteSaveOpen">
+          Save
+        </span>
+      </a>
+    </div>
+    {{ $two := len $.Params | eq 2 }}
+    {{ $three := len $.Params | eq 3 }}
+    {{ if len $.Params | eq 1 }} <div class="Caption">
+        <a class="CaptionUsername" href="{{ $authorURL }}" target="_blank"> {{ .author_name }}</a> {{ .title }}
+      </div>{{ else }}      
+      <div class="SocialProof">
+      <a href="{{ $mediaURL }}" target="_blank">
+        {{ with $two }}{{ if gt $like 1 }}{{ $like }} likes{{ else }}1 like{{ end }}{{ end }}
+        {{ with $three }}{{ if gt $likes 1 }}{{ $likes }} likes{{ else }}1 like{{ end }}{{ end }}
+      </a>
+    </div>{{ if eq ($.Get 1) "hidecaption" }}{{ else }}
+      <div class="Caption">
+        <a class="CaptionUsername" href="{{ $authorURL }}" target="_blank"> {{ .author_name }}</a> {{ .title }}
+      </div>{{ end }}{{ end }} 
+    <div class="Footer">
+      <a class="Timestamp" href="{{ $mediaURL }}" target="_blank">
+        {{ $timestamp := .html | replaceRE "(<)(.*)(datetime=)" "" | replaceRE "((?:>[^>\r\n]*){5})$" "" | replaceRE "\"" "" | string | time }}
+        {{ $minutes := div (sub now.Unix $timestamp.Unix) 60 }}
+        {{ $hours := div (sub now.Unix $timestamp.Unix) 3600 }}
+        {{ $days := div (sub now.Unix $timestamp.Unix) 86400 }}
+        {{ $months := div (sub now.Unix $timestamp.Unix) 2629800 }}
+        <span class="ago" datetime="{{ $timestamp }}">
+          {{ if lt $minutes 60 }}{{ $minutes }} minutes ago{{ end }}{{ if lt $hours 24 }}{{ if eq $hours 1 }}{{ $hours }} hour ago{{ end }}{{ if gt $hours 1 }}{{ $hours }} hours ago{{ end }}{{ end }}{{ if lt $days 30 }}{{ if eq $days 1 }}{{ $days }} day ago{{ end }}{{ if gt $days 1 }}{{ $days }} days ago{{ end }}{{ end }}{{ if eq $months 1 }}{{ $months }} month ago{{ end }}{{ if gt $months 1 }}{{ $months }} months ago{{ end }}
+        </span></a>
+      <a class="Glyph" href="{{ $mediaURL }}" target="_blank">
+        <span class="Sprite embedSpriteGlyph hideText">Instagram</span>
+      </a>      
+    </div></div>
+  {{ end }}
+  {{ end }}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+  {{ $id := index .Params 0 }}
+  {{- $vimeo := getJSON "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/" $id -}}
+  	<style>
+      .vimeo {
+            position: relative;padding-bottom: 56.23%;height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 5px;
+        }
+        .vimeo img {
+            min-width:100%;
+            height:auto;
+            color: #000;
+        }
+        .vimeo .play {
+            height: 72px;
+            width: 72px;
+            left: 50%;
+            top: 50%;
+            margin-left: -36px;
+            margin-top: -36px;
+            position: absolute;
+            cursor: pointer;
+        }
+        .vimeo .round-box {
+            background: rgba(23,35,34,.75);
+            border-radius: .5em;
+            width: 6.5em;
+            height: 4em;
+            color: #fff;
+            position: relative;
+            -webkit-transition: opacity 250ms ease-out,background-color 40ms,color 40ms;
+            transition: opacity 250ms ease-out,background;
+}
+
+.vimeo .play-icon {
+    margin: auto;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+</style>
+{{ with $vimeo }}
+    <div class="vimeo">
+	<a href="https://vimeo.com/{{ $id | safeHTMLAttr }}" target="_blank">
+        <img src="{{ .thumbnail_url }}" alt="{{ .title }}">	    
+<div class="play"><div class="round-box"><div class="play-icon"><svg viewBox="0 0 20 20" preserveAspectRatio="xMidYMid" tabindex="-1"><polygon fill="#FFF" points="1,0 20,10 1,20"></polygon></svg></div></div></div></a>{{ end }}
