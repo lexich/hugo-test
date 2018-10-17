@@ -5,6 +5,7 @@ month = "2014/11"
 title= "Tilos’ Dream"
 color = "drawing/black"
 tags = [ "drawing", "ink" ]
+crosslink = "true"
 +++
 
 Tilos’ Dream again but not a link.

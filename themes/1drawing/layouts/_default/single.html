@@ -4,49 +4,26 @@
         <div id="main">
             <h1><a href="{{ .Site.BaseURL }}">{{ .Title }}</a></h1>
             <ul class="projects"> 
-{{ $related := .Site.RegularPages.Related . }}
-                {{ with $related }}
-                {{ range . }}
-            {{ $title := .Params.title }}
-            {{ $permalink := .Permalink }}          
-            {{ with $.Content }}
-            {{- if and (strings.Contains $.Content $title) (ne $title $.Params.title) -}}
-<li>{{ $content := split . $title }}{{ index $content 0 | safeHTML }}<a href="{{ $permalink }}">{{ $title }}</a>{{ index $content 1 | safeHTML }}</li>
+{{ $related := .Site.RegularPages.RelatedIndices . "crosslink" }}
+{{ with $related }}
+{{ range . }}
+{{ $title := .Params.title }}
+{{ $permalink := .Permalink }}          
+{{- if and (strings.Contains $.Content $title) (ne $title $.Params.title) -}}
+<li>{{ $content := split $.Content $title }}{{ index $content 0 | safeHTML }}<a href="{{ $permalink }}">{{ $title }}</a>{{ index $content 1 | safeHTML }}</li>
 {{ end }}
 {{ end }}
 {{ end }}
-{{ end }}
-
-
-
-
-{{ $related := .Site.RegularPages.Related . }}
-{{ if eq (len $related) 0 }}
-<li>{{ $.Content }}</li>
-{{ end }}
-
 {{ if not $related }}
-Sadly, this page has no related content.
+<li>{{ .Content }}</li>
 {{ end }}
 
-{{ if eq $related 0 }}
-Sadly, this page has no related content.
+{{ $reltag := .Site.RegularPages.RelatedIndices . "tags" }}
+{{ with $reltag }}
+{{ range . }}
+I'm a related {{ .Title }} tag
 {{ end }}
-
-{{ if eq (len $related) 0 }}
-Sadly, this page has no related content.
 {{ end }}
-
-
-
-
-
-
-
-
-
-
-
 
  {{ with .Resources.ByType "page" }}
             {{ range . }}            
