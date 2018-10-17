@@ -1,10 +1,11 @@
 +++
-title = "Iliad"
+title = "Nekyia"
 date = "10 Aug 18 22:04 EEST"
 year = "2018"
+form = "normal"
 month = "2018/08"
 color = "drawing/black"
 tags = [ "drawing", "ink" ]
 +++
 
-Oh Crap! Tilos’ Dream is here.
+Oh Crap! Nothing is here.

@@ -9,9 +9,9 @@
 											---
 						<h3>Chronological Archive</h3>
 						{{- $var := .Scratch -}}
-					{{ range .Pages }}
+					{{ range .Data.Pages }}
 						<p>Year: <a href="{{ print .Section "/" .Params.year | relURL }}">{{ .Params.year }}</a> | Month: <a href="{{ print .Section "/" .Params.month | relURL }}">{{ .Params.month }}</a></p>
-						{{- $var.Add "color" (slice .Params.color) -}}
+						{{- $var.Add "color" (slice (string (printf "%v" .Params.color))) -}}
 						{{ end }}
 						{{- $var.Set "color" ($var.Get "color" | uniq) -}}
 						{{- $color := $var.Get "color" }}

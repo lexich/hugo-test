@@ -55,3 +55,15 @@ avatar = "" # URL string
 disabled = false
 avatar = "https://instagram.fath3-4.fna.fbcdn.net/vp/d4c9a11618106e09b0986cbae64fbd14/5B5706C5/t51.2885-19/"
 
+
+[related]
+
+threshold = 80
+includeNewer = true
+toLower = false
+
+
+[[related.indices]]
+name  = "tags"
+weight = 100
+
